@@ -1,38 +1,107 @@
 package com.spalla.rssreader;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
+// my package
+import com.spalla.rssreader.ParserLib.RSSUtilities;
 
-public class MainActivity extends ActionBarActivity {
+// Start screen, after default feed has been loaded
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-    }
+public class MainActivity extends Activity
+{
+	private final String TAG = "MainActivity";
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+	// Keep track of when feed exists
+	private SharedPreferences prefs;
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+		// Remove the icon from the ActionBar as it looks bad IMO
+		getActionBar().setDisplayShowHomeEnabled(false);
 
-        return super.onOptionsItemSelected(item);
-    }
+		// Get our shared prefs
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+		// See if the feed has been used
+		if(!prefs.getBoolean("isSetup", false))
+		{
+			// Set the content view
+			setContentView(R.layout.loading);
+
+			// see if you have a internet connection
+			if(checkInternetConnection(getApplicationContext()) == false)
+			{
+				// if no connection found throw error msg
+				internetErrorDialog();
+			}
+			else
+			{
+				RSSUtilities rssutil = new RSSUtilities();
+				rssutil.changeRSSFeed(false, this);
+			}
+		}
+		// Start new activity and stop this one
+		else
+		{
+			startActivity(new Intent(this, ListViewActivity.class));
+			finish();
+		}
+	}
+
+	private boolean checkInternetConnection(Context context)
+	{
+		ConnectivityManager cm = (ConnectivityManager) getSystemService(context.CONNECTIVITY_SERVICE);
+		// test for connection
+		if (cm.getActiveNetworkInfo() != null
+				&& cm.getActiveNetworkInfo().isAvailable()
+				&& cm.getActiveNetworkInfo().isConnected())
+		{
+			return true;
+		}
+		else
+		{
+			Log.v(TAG, "Internet Connection Not Present");
+			return false;
+		}
+	}
+
+	// Dialogs
+	public void internetErrorDialog()
+	{
+		new AlertDialog.Builder(this)
+				.setTitle( "No Internet Connection" )
+				.setMessage( "No internet connection found, you might want to try again later." )
+				.setCancelable(false)
+				/*
+				.setPositiveButton( "OK", new DialogInterface.OnClickListener()
+				{
+					public void onClick(DialogInterface dialog, int which)
+					{
+						Log.d( "AlertDialog", "OK" );
+						// here is where you would throw to somewhere else
+					}
+				})
+				*/
+				.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						Log.d("AlertDialog", "Exit");
+						// here is where you would throw to somewhere else
+						finish();
+					}
+				})
+				.show();
+	}
+
 }

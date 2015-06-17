@@ -61,7 +61,6 @@ public class RSSUtilities
 	}
 
 
-
 	// DIALOGS
 
 	// Takes a string URL as a new feed
@@ -71,7 +70,7 @@ public class RSSUtilities
 		final EditText input = new EditText(context);
 		builder.setTitle("New RSS Feed URL:")
 		.setMessage("Please enter a valid RSS URL:\n" +
-				"Press Cancel for the default RSS URL")
+				"Press OK for the default RSS URL")
 		.setView(input)
 		.setCancelable(false)
 		.setPositiveButton("OK", new DialogInterface.OnClickListener() {

@@ -1,5 +1,7 @@
 package com.spalla.rssreader.ParserLib;
 
+import android.util.Log;
+
 import java.io.Serializable;
 
 // Stores values from RSS feed prior to being sent to RSSDFeed object list
@@ -30,9 +32,9 @@ public class RSSItem implements Serializable
 		author = Author;
 	}
 
-	void setURL(String URL)
+	void setURL(String url)
 	{
-		URL = URL;
+		URL = url;
 	}
 
 	void setDescription(String Description)

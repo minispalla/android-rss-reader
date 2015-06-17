@@ -49,6 +49,12 @@ public class ListViewActivity extends Activity
 
 		// Get feed from the passed bundle
 		feed = (RSSFeed)new WriteRSSObjectFile(this).readObject(getFeedName());
+		String feedName = getFeedName();
+		Log.d(TAG,"feedName="+feedName);
+		if(feed == null)
+		{
+			Log.d(TAG, "feed=null");
+		}
 
 		list = (ListView)findViewById(R.id.listView);
 		list.setVerticalFadingEdgeEnabled(true);
@@ -63,15 +69,15 @@ public class ListViewActivity extends Activity
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
 			{
-				// Send web Intent for url
-				Log.d(TAG,"arg2="+Integer.toString(arg2));
+
+				// grab url from rss element
 				String itemUrl = feed.getItem(arg2).getURL();
-				Log.d(TAG, "itemUrl="+itemUrl);
+
+				// intent to throw to browser on phone
 				Uri uriUrl = Uri.parse(itemUrl);
 				Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
 				startActivity(launchBrowser);
-				// Start the new activity and pass on the feed item
-				//startActivity(new Intent(getBaseContext(), PostActivity.class).putExtra("pos", arg2));
+				
 			}
 		});
 	}

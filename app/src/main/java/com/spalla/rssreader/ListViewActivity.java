@@ -77,7 +77,7 @@ public class ListViewActivity extends Activity
 				Uri uriUrl = Uri.parse(itemUrl);
 				Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
 				startActivity(launchBrowser);
-				
+
 			}
 		});
 	}

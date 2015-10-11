@@ -4,4 +4,4 @@ This was a project was for a contact to see if I could build a basic RSS reader 
 
 ###Screenshots
 ![MainScreen](https://raw.github.com/minispalla/android-rss-reader/master/screenshots/device-2015-10-11-142802.png)
-![AddingFeed](https://raw.github.com/minispalla/android-rss-reader/master/screenshots/device-2015-10-11-142832.png)
+![AddingFeed](https://raw.github.com/minispalla/android-rss-reader/master/screenshots/device-2015-10-11-144512.png)
